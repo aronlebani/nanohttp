@@ -1,4 +1,8 @@
-#[derive(Debug)]
+use crate::method::Method;
+use crate::error::{Error, ErrorType};
+use crate::header::Header;
+
+#[derive(Debug, PartialEq)]
 pub struct Request {
     pub method: Method,
     pub path: String,
@@ -97,7 +101,7 @@ impl Request {
         let mut parts = line.split(" ");
 
         let method = match parts.next() {
-            Some(method) => Method::new(method)?,
+            Some(method) => Method::from_string(method)?,
             None => return Err(parser_err),
         };
 
@@ -114,5 +118,43 @@ impl Request {
         let (scheme, version) = Self::parse_protocol(protocol)?;
 
         Ok((method, path, scheme, version))
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::Request;
+    use crate::Method;
+    use crate::Header;
+
+    #[test]
+    fn parse_get_request() {
+        let req_string = "GET / HTTP/1.1\r\nHost: localhost:3333\r\nUser-Agent: curl/7.81.0\r\nAccept: */*\r\n";
+        let result = Request::from_string(req_string).unwrap();
+
+        assert_eq!(result.method, Method::GET);
+        assert_eq!(result.path, "/");
+        assert_eq!(result.scheme, "HTTP");
+        assert_eq!(result.version, "1.1");
+        assert_eq!(result.headers[0], Header::new("Host", "localhost:3333"));
+        assert_eq!(result.headers[1], Header::new("User-Agent", "curl/7.81.0"));
+        assert_eq!(result.headers[2], Header::new("Accept", "*/*"));
+    }
+
+    #[test]
+    fn parse_post_request() {
+        let req_string = "POST /hello-world HTTP/1.1\r\nHost: localhost:3333\r\nUser-Agent: curl/7.81.0\r\nAccept: */*\r\nContent-Type: application/json\r\nContent-Length: 18\r\n\r\n{ \"hello\": \"world\" }";
+        let result = Request::from_string(req_string).unwrap();
+
+        assert_eq!(result.method, Method::POST);
+        assert_eq!(result.path, "/hello-world");
+        assert_eq!(result.scheme, "HTTP");
+        assert_eq!(result.version, "1.1");
+        assert_eq!(result.headers[0], Header::new("Host", "localhost:3333"));
+        assert_eq!(result.headers[1], Header::new("User-Agent", "curl/7.81.0"));
+        assert_eq!(result.headers[2], Header::new("Accept", "*/*"));
+        assert_eq!(result.headers[3], Header::new("Content-Type", "application/json"));
+        assert_eq!(result.headers[4], Header::new("Content-Length", "18"));
+        assert_eq!(result.body, "{ \"hello\": \"world\" }");
     }
 }

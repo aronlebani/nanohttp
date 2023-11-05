@@ -1,4 +1,7 @@
-#[derive(Debug)]
+
+use crate::error::{Error, ErrorType};
+
+#[derive(Debug, PartialEq)]
 pub enum Method {
     HEAD,
     GET,
@@ -8,7 +11,7 @@ pub enum Method {
 }
 
 impl Method {
-    fn new(from: &str) -> Result<Self, Error> {
+    pub fn from_string(from: &str) -> Result<Self, Error> {
         let method_err = Error {
             err_type: ErrorType::InvalidMethod,
             msg: "Invalid or unsupported http method".to_string(),
@@ -22,5 +25,25 @@ impl Method {
             "DELETE" => Ok(Method::DELETE),
             _ => Err(method_err),
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::Method;
+
+    #[test]
+    fn method_from_string() {
+        let result = Method::from_string("GET");
+        let expected = Ok(Method::GET);
+
+        assert_eq!(result, expected);
+    }
+
+    #[test]
+    fn method_from_invalid_string() {
+        let result = Method::from_string("HELLO");
+
+        assert!(result.is_err());
     }
 }
