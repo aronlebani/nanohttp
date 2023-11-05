@@ -13,6 +13,7 @@ pub struct Request {
 }
 
 impl Request {
+    /// Parse a http plaintext request into a `Request` object.
     pub fn from_string(buffer: &str) -> Result<Self, Error> {
         Self::parse(buffer)
     }

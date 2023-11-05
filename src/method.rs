@@ -11,6 +11,8 @@ pub enum Method {
 }
 
 impl Method {
+    // Create a new `Method` from a string representation. Supported methods are HEAD, GET, POST,
+    // PUT, DELETE.
     pub fn from_string(from: &str) -> Result<Self, Error> {
         let method_err = Error {
             err_type: ErrorType::InvalidMethod,

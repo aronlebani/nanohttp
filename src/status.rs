@@ -11,6 +11,7 @@ pub enum Status {
 }
 
 impl Status {
+    /// Get the numeric representation of the status code.
     fn code(&self) -> u16 {
         match self {
             Status::Ok => 200,
@@ -25,6 +26,7 @@ impl Status {
     }
 
     fn message(&self) -> &str {
+        // Get the status message.
         match self {
             Status::Ok => "OK",
             Status::SeeOther => "SEE OTHER",
@@ -39,6 +41,7 @@ impl Status {
 }
 
 impl ToString for Status {
+    /// Convert the `Status` to a valid http plaintext representation.
     fn to_string(&self) -> String {
         format!("{} {}", self.code(), self.message())
     }

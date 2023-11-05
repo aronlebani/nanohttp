@@ -5,6 +5,7 @@ pub struct Header {
 }
 
 impl Header {
+    /// Create a new http header from a key-value pair.
     pub fn new(key: &str, value: &str) -> Self {
         Header {
             key: key.to_string(),
@@ -14,6 +15,7 @@ impl Header {
 }
 
 impl ToString for Header {
+    /// Convert the `Header` to a valid http plaintext representation.
     fn to_string(&self) -> String {
         format!("{}: {}", self.key, self.value)
     }

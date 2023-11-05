@@ -11,6 +11,7 @@ pub struct Response {
 }
 
 impl Response {
+    /// Create a new http response with no body.
     pub fn empty() -> Self {
         Response {
             scheme: "HTTP".to_string(),
@@ -21,6 +22,9 @@ impl Response {
         }
     }
 
+    /// Create a new http response with a given body and content type. Sets the `Content-Type`
+    /// header to the content type provided, and automatically sets the `Content-Length` header to
+    /// the length of the provided content.
     pub fn body(content: &str, content_type: &str) -> Self {
         let content_length = content.len();
 
@@ -35,6 +39,7 @@ impl Response {
         .header(Header::new("Content-Length", &content_length.to_string()))
     }
 
+    /// Set the status of the http request.
     pub fn status(self, status: Status) -> Self {
         Response {
             status,
@@ -42,6 +47,7 @@ impl Response {
         }
     }
 
+    /// Add a header to the http request.
     pub fn header(self, header: Header) -> Self {
         let mut headers = self.headers;
         headers.push(header);
@@ -51,6 +57,7 @@ impl Response {
 }
 
 impl ToString for Response {
+    /// Convert the `Response` to a valid http plaintext response.
     fn to_string(&self) -> String {
         let headers = self
             .headers

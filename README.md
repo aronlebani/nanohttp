@@ -3,5 +3,5 @@
 ## Todo
 
 * [ ] Parse query string parameters for GET requests
-* [ ] Example
-* [ ] Docs
+* [x] Example
+* [x] Docs
