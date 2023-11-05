@@ -21,7 +21,7 @@ impl Response {
         }
     }
 
-    pub fn html(content: String) -> Self {
+    pub fn body(content: &str, content_type: &str) -> Self {
         let content_length = content.len();
 
         Response {
@@ -29,23 +29,9 @@ impl Response {
             version: "1.1".to_string(),
             status: Status::Ok,
             headers: Vec::new(),
-            content,
+            content: content.to_string(),
         }
-        .header(Header::new("Content-Type", "text/html"))
-        .header(Header::new("Content-Length", &content_length.to_string()))
-    }
-
-    pub fn json(content: String) -> Self {
-        let content_length = content.len();
-
-        Response {
-            scheme: "HTTP".to_string(),
-            version: "1.1".to_string(),
-            status: Status::Ok,
-            headers: Vec::new(),
-            content,
-        }
-        .header(Header::new("Content-Type", "application/json"))
+        .header(Header::new("Content-Type", content_type))
         .header(Header::new("Content-Length", &content_length.to_string()))
     }
 
@@ -109,50 +95,20 @@ mod tests {
         assert!(result.to_string().contains("200 OK"));
     }
 
-    const HTML: &str = "<html><head><title>Hello, world!</title></head><body><h1>Hello, world!</h1></body></html>";
-
     #[test]
-    fn html_response_content() {
-        let result = Response::html(HTML.to_string());
+    fn response_content() {
+        let html = "<html><head><title>Hello, world!</title></head><body><h1>Hello, world!</h1></body></html>";
+        let result = Response::body(html, "text/html");
 
-        assert!(result.to_string().contains(HTML));
+        assert!(result.to_string().contains(html));
     }
 
     #[test]
-    fn html_response_content_type_header() {
-        let result = Response::html(HTML.to_string());
-
-        assert!(result.to_string().contains("Content-Type: text/html"));
-    }
-
-    #[test]
-    fn html_response_content_length_header() {
-        let result = Response::html(HTML.to_string());
+    fn response_content_length_header() {
+        let html = "<html><head><title>Hello, world!</title></head><body><h1>Hello, world!</h1></body></html>";
+        let result = Response::body(html, "text/html");
 
         assert!(result.to_string().contains("Content-Length: 89"));
-    }
-
-    const JSON: &str = "{ \"hello\": \"world\" }";
-
-    #[test]
-    fn json_response_content() {
-        let result = Response::json(JSON.to_string());
-
-        assert!(result.to_string().contains(JSON));
-    }
-
-    #[test]
-    fn json_response_content_type_header() {
-        let result = Response::json(JSON.to_string());
-
-        assert!(result.to_string().contains("Content-Type: application/json"));
-    }
-
-    #[test]
-    fn json_response_content_length_header() {
-        let result = Response::json(JSON.to_string());
-
-        assert!(result.to_string().contains("Content-Length: 20"));
     }
 
     #[test]
@@ -171,14 +127,16 @@ mod tests {
 
     #[test]
     fn set_header_does_not_override_existing_headers() {
-        let result = Response::html(HTML.to_string()).header(Header::new("Access-Control-Allow-Origin", "*"));
+        let html = "<html><head><title>Hello, world!</title></head><body><h1>Hello, world!</h1></body></html>";
+        let result = Response::body(html, "text/html").header(Header::new("Access-Control-Allow-Origin", "*"));
 
-        assert!(result.to_string().contains("Content-Type: text/html"));
+        assert!(result.to_string().contains("Content-Length: 89"));
     }
 
     #[test]
     fn response_format() {
-        let result = Response::html(HTML.to_string()).status(Status::SeeOther).to_string();
+        let html = "<html><head><title>Hello, world!</title></head><body><h1>Hello, world!</h1></body></html>";
+        let result = Response::body(html, "text/html").status(Status::SeeOther).to_string();
         let expected = "HTTP/1.1 303 SEE OTHER\r\nContent-Type: text/html\r\nContent-Length: 89\r\n\r\n<html><head><title>Hello, world!</title></head><body><h1>Hello, world!</h1></body></html>";
 
         assert_eq!(result, expected);
