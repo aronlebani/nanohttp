@@ -11,9 +11,9 @@
 //! use async_std::io::{ReadExt, WriteExt};
 //! use async_std::net::{TcpListener, TcpStream};
 //! use async_std::task;
-//! 
+//!
 //! use nanohttp::{Method, Status, Request, Response};
-//! 
+//!
 //! async fn handler(req: Request) -> Response {
 //!     match req.path.as_str() {
 //!         "/" => match req.method {
@@ -32,27 +32,27 @@
 //!         _ => Response::empty().status(Status::NotFound),
 //!     }
 //! }
-//! 
+//!
 //! async fn handle_connection(mut connection: TcpStream) {
 //!     let mut buffer = [0; 1024];
-//! 
+//!
 //!     connection.read(&mut buffer).await.unwrap();
-//! 
+//!
 //!     let req_text = from_utf8(&buffer).unwrap().trim_end_matches("\0");
-//! 
+//!
 //!     let req = Request::from_string(req_text).unwrap();
 //!     let res = handler(req).await.to_string();
-//! 
+//!
 //!     let res_bytes = res.as_bytes();
-//! 
+//!
 //!     connection.write(res_bytes).await.unwrap();
 //!     connection.flush().await.unwrap();
 //! }
-//! 
+//!
 //! #[async_std::main]
 //! async fn main() {
 //!     let listener = TcpListener::bind("127.0.0.1:3333").await.unwrap();
-//! 
+//!
 //!     loop {
 //!         let (connection, _) = listener.accept().await.unwrap();
 //!         task::spawn(async move {
@@ -69,7 +69,7 @@ mod request;
 mod response;
 mod status;
 
-pub use error::{Error,ErrorType};
+pub use error::{Error, ErrorType};
 pub use header::Header;
 pub use method::Method;
 pub use request::Request;

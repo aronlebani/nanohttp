@@ -50,7 +50,7 @@ impl ToString for Status {
 #[cfg(test)]
 mod tests {
     use crate::Status;
-    
+
     #[test]
     fn status_code() {
         let result = Status::Ok.code();

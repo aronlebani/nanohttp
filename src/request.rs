@@ -1,6 +1,6 @@
-use crate::method::Method;
 use crate::error::{Error, ErrorType};
 use crate::header::Header;
+use crate::method::Method;
 
 #[derive(Debug, PartialEq)]
 pub struct Request {
@@ -124,13 +124,14 @@ impl Request {
 
 #[cfg(test)]
 mod tests {
-    use crate::Request;
-    use crate::Method;
     use crate::Header;
+    use crate::Method;
+    use crate::Request;
 
     #[test]
     fn parse_get_request() {
-        let req_string = "GET / HTTP/1.1\r\nHost: localhost:3333\r\nUser-Agent: curl/7.81.0\r\nAccept: */*\r\n";
+        let req_string =
+            "GET / HTTP/1.1\r\nHost: localhost:3333\r\nUser-Agent: curl/7.81.0\r\nAccept: */*\r\n";
         let result = Request::from_string(req_string).unwrap();
 
         assert_eq!(result.method, Method::GET);
@@ -154,7 +155,10 @@ mod tests {
         assert_eq!(result.headers[0], Header::new("Host", "localhost:3333"));
         assert_eq!(result.headers[1], Header::new("User-Agent", "curl/7.81.0"));
         assert_eq!(result.headers[2], Header::new("Accept", "*/*"));
-        assert_eq!(result.headers[3], Header::new("Content-Type", "application/json"));
+        assert_eq!(
+            result.headers[3],
+            Header::new("Content-Type", "application/json")
+        );
         assert_eq!(result.headers[4], Header::new("Content-Length", "18"));
         assert_eq!(result.body, "{ \"hello\": \"world\" }");
     }

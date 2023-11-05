@@ -41,10 +41,7 @@ impl Response {
 
     /// Set the status of the http request.
     pub fn status(self, status: Status) -> Self {
-        Response {
-            status,
-            ..self
-        }
+        Response { status, ..self }
     }
 
     /// Add a header to the http request.
@@ -77,28 +74,28 @@ impl ToString for Response {
 
 #[cfg(test)]
 mod tests {
+    use crate::Header;
     use crate::Response;
     use crate::Status;
-    use crate::Header;
 
     #[test]
     fn empty_response_scheme() {
         let result = Response::empty();
-        
+
         assert!(result.to_string().contains("HTTP"));
     }
 
     #[test]
     fn empty_response_version() {
         let result = Response::empty();
-        
+
         assert!(result.to_string().contains("1.1"));
     }
 
     #[test]
     fn empty_response_status() {
         let result = Response::empty();
-        
+
         assert!(result.to_string().contains("200 OK"));
     }
 
@@ -129,13 +126,16 @@ mod tests {
     fn set_header() {
         let result = Response::empty().header(Header::new("Access-Control-Allow-Origin", "*"));
 
-        assert!(result.to_string().contains("Access-Control-Allow-Origin: *"));
+        assert!(result
+            .to_string()
+            .contains("Access-Control-Allow-Origin: *"));
     }
 
     #[test]
     fn set_header_does_not_override_existing_headers() {
         let html = "<html><head><title>Hello, world!</title></head><body><h1>Hello, world!</h1></body></html>";
-        let result = Response::body(html, "text/html").header(Header::new("Access-Control-Allow-Origin", "*"));
+        let result = Response::body(html, "text/html")
+            .header(Header::new("Access-Control-Allow-Origin", "*"));
 
         assert!(result.to_string().contains("Content-Length: 89"));
     }
@@ -143,7 +143,9 @@ mod tests {
     #[test]
     fn response_format() {
         let html = "<html><head><title>Hello, world!</title></head><body><h1>Hello, world!</h1></body></html>";
-        let result = Response::body(html, "text/html").status(Status::SeeOther).to_string();
+        let result = Response::body(html, "text/html")
+            .status(Status::SeeOther)
+            .to_string();
         let expected = "HTTP/1.1 303 SEE OTHER\r\nContent-Type: text/html\r\nContent-Length: 89\r\n\r\n<html><head><title>Hello, world!</title></head><body><h1>Hello, world!</h1></body></html>";
 
         assert_eq!(result, expected);
