@@ -1,6 +1,6 @@
 use crate::error::{Error, ErrorType};
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub enum Method {
     HEAD,
     GET,

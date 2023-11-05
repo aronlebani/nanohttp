@@ -2,13 +2,13 @@ use crate::error::{Error, ErrorType};
 use crate::header::Header;
 use crate::method::Method;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct Query {
     key: String,
     value: String,
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct Path {
     pub uri: String,
     pub query: Vec<Query>,

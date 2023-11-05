@@ -1,7 +1,7 @@
 use crate::header::Header;
 use crate::status::Status;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct Response {
     scheme: String,
     version: String,
