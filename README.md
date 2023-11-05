@@ -16,17 +16,15 @@ use nanohttp::{Method, Status, Request, Response};
 async fn handler(req: Request) -> Response {
     match req.path.uri.as_str() {
         "/" => match req.method {
-            Method::GET => {
-                Response::empty().status(Status::Ok)
-            },
+            Method::GET => Response::empty().status(Status::Ok),
             _ => Response::empty().status(Status::NotAllowed),
         },
         "/hello" => match req.method {
             Method::GET => {
                 let html = "<html><head><title>Hello, world!</title></head><body><h1>Hello, world!</h1></body></html>";
-                Response::body(html, "text/html").status(Status::Ok)
+                Response::content(html, "text/html").status(Status::Ok)
             },
-        _ => Response::empty().status(Status::NotAllowed),
+            _ => Response::empty().status(Status::NotAllowed),
         },
         _ => Response::empty().status(Status::NotFound),
     }

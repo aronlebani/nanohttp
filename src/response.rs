@@ -22,12 +22,9 @@ impl Response {
         }
     }
 
-    /// Create a new http response with a given body and content type. Sets the `Content-Type`
-    /// header to the content type provided, and automatically sets the `Content-Length` header to
-    /// the length of the provided content.
-    pub fn body(content: &str, content_type: &str) -> Self {
-        let content_length = content.len();
-
+    // Create a new http response with a given body. Does not set the `Content-Type` or
+    // `Content-Length` header.
+    pub fn body(content: &str) -> Self {
         Response {
             scheme: "HTTP".to_string(),
             version: "1.1".to_string(),
@@ -35,20 +32,29 @@ impl Response {
             headers: Vec::new(),
             content: content.to_string(),
         }
-        .header(Header::new("Content-Type", content_type))
-        .header(Header::new("Content-Length", &content_length.to_string()))
+    }
+
+    /// Create a new http response with a given body and content type. Sets the `Content-Type`
+    /// header to the content type provided, and automatically sets the `Content-Length` header to
+    /// the length of the provided content.
+    pub fn content(content: &str, content_type: &str) -> Self {
+        let content_length = content.len();
+
+        Self::body(content)
+            .header(Header::new("Content-Type", content_type))
+            .header(Header::new("Content-Length", &content_length.to_string()))
     }
 
     /// Create a `html` http response. This method is the same as [Response::body], but it automatically sets
     /// the `Content-Type: text/html` header.
     pub fn html(content: &str) -> Self {
-        Self::body(content, "text/html")
+        Self::content(content, "text/html")
     }
 
     /// Create a `json` http response. This method is the same as [Response::body], but it automatically sets
     /// the `Content-Type: application/json` header.
     pub fn json(content: &str) -> Self {
-        Self::body(content, "application/json")
+        Self::content(content, "application/json")
     }
 
     /// Add a cookie to the http response.
@@ -119,7 +125,7 @@ mod tests {
     #[test]
     fn response_content() {
         let html = "<html><head><title>Hello, world!</title></head><body><h1>Hello, world!</h1></body></html>";
-        let result = Response::body(html, "text/html");
+        let result = Response::content(html, "text/html");
 
         assert!(result.to_string().contains(html));
     }
@@ -127,7 +133,7 @@ mod tests {
     #[test]
     fn response_content_length_header() {
         let html = "<html><head><title>Hello, world!</title></head><body><h1>Hello, world!</h1></body></html>";
-        let result = Response::body(html, "text/html");
+        let result = Response::content(html, "text/html");
 
         assert!(result.to_string().contains("Content-Length: 89"));
     }
@@ -151,7 +157,7 @@ mod tests {
     #[test]
     fn set_header_does_not_override_existing_headers() {
         let html = "<html><head><title>Hello, world!</title></head><body><h1>Hello, world!</h1></body></html>";
-        let result = Response::body(html, "text/html")
+        let result = Response::content(html, "text/html")
             .header(Header::new("Access-Control-Allow-Origin", "*"));
 
         assert!(result.to_string().contains("Content-Length: 89"));
@@ -160,7 +166,7 @@ mod tests {
     #[test]
     fn response_format() {
         let html = "<html><head><title>Hello, world!</title></head><body><h1>Hello, world!</h1></body></html>";
-        let result = Response::body(html, "text/html")
+        let result = Response::content(html, "text/html")
             .status(Status::SeeOther)
             .to_string();
         let expected = "HTTP/1.1 303 SEE OTHER\r\nContent-Type: text/html\r\nContent-Length: 89\r\n\r\n<html><head><title>Hello, world!</title></head><body><h1>Hello, world!</h1></body></html>";
