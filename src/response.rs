@@ -45,14 +45,14 @@ impl Response {
             .header(Header::new("Content-Length", &content_length.to_string()))
     }
 
-    /// Create a `html` http response. This method is the same as [Response::body], but it automatically sets
-    /// the `Content-Type: text/html` header.
+    /// Create a `html` http response. This method is the same as [Response::content], but it
+    /// automatically sets the `Content-Type: text/html` header.
     pub fn html(content: &str) -> Self {
         Self::content(content, "text/html")
     }
 
-    /// Create a `json` http response. This method is the same as [Response::body], but it automatically sets
-    /// the `Content-Type: application/json` header.
+    /// Create a `json` http response. This method is the same as [Response::content], but it
+    /// automatically sets the `Content-Type: application/json` header.
     pub fn json(content: &str) -> Self {
         Self::content(content, "application/json")
     }

@@ -4,6 +4,10 @@ version = "0.1.0"
 edition = "2021"
 description = "A library for parsing http requests and building http responses."
 license = "MIT"
+homepage = "https://github.com/aronlebani/nanohttp.git"
+repository = "https://github.com/aronlebani/nanohttp.git"
+authors = ["Aron Lebani"]
+readme = "README.md"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
