@@ -39,12 +39,29 @@ impl Response {
         .header(Header::new("Content-Length", &content_length.to_string()))
     }
 
-    /// Set the status of the http request.
+    /// Create a `html` http response. This method is the same as [body], but it automatically sets
+    /// the `Content-Type: text/html` header.
+    pub fn html(content: &str) -> Self {
+        Self::body(content, "text/html")
+    }
+
+    /// Create a `json` http response. This method is the same as [body], but it automatically sets
+    /// the `Content-Type: application/json` header.
+    pub fn json(content: &str) -> Self {
+        Self::body(content, "application/json")
+    }
+
+    /// Add a cookie to the http response.
+    pub fn cookie(self, content: &str) -> Self {
+        self.header(Header::new("Set-Cookie", content))
+    }
+
+    /// Set the status of the http response.
     pub fn status(self, status: Status) -> Self {
         Response { status, ..self }
     }
 
-    /// Add a header to the http request.
+    /// Add a header to the http response.
     pub fn header(self, header: Header) -> Self {
         let mut headers = self.headers;
         headers.push(header);

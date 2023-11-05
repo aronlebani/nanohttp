@@ -1,7 +1,6 @@
 //! # nanohttp
 //!
-//! `nanohttp` is a small library to parse http requests and create valid http responses. It
-//! supports HTTP/1.1 only.
+//! `nanohttp` is a small library to parse http requests and build valid http responses.
 //!
 //! ## Examples
 //!
@@ -15,7 +14,7 @@
 //! use nanohttp::{Method, Status, Request, Response};
 //!
 //! async fn handler(req: Request) -> Response {
-//!     match req.path.as_str() {
+//!     match req.path.uri.as_str() {
 //!         "/" => match req.method {
 //!             Method::GET => {
 //!                 Response::empty().status(Status::Ok)
@@ -51,7 +50,7 @@
 //!
 //! #[async_std::main]
 //! async fn main() {
-//!     let listener = TcpListener::bind("127.0.0.1:3333").await.unwrap();
+//!     let listener = TcpListener::bind("127.0.0.1:8000").await.unwrap();
 //!
 //!     loop {
 //!         let (connection, _) = listener.accept().await.unwrap();
@@ -72,6 +71,6 @@ mod status;
 pub use error::{Error, ErrorType};
 pub use header::Header;
 pub use method::Method;
-pub use request::Request;
+pub use request::{Path, Request};
 pub use response::Response;
 pub use status::Status;
