@@ -1,6 +1,7 @@
 //! # nanohttp
 //!
-//! `nanohttp` is a small library for parsing HTTP requests and building HTTP responses.
+//! `nanohttp` is a small zero-dependency library for parsing HTTP requests and building HTTP
+//! responses.
 //!
 //! It is intended purely as an implementation of the HTTP protocol, and therefore does not
 //! handle things like routing, json serialization and deserialization, or building a HTTP server.
