@@ -30,6 +30,12 @@ understand how the async libraries work, there is
 [this excellent blog post](https://ibraheem.ca/posts/too-many-web-servers/), which would enable
 building a HTTP server using concurrency with absolutely zero dependencies. But thats a lot of work...
 
+## Contribution
+
+This library is not complete, for example there are quite a few HTTP status codes and a few methods
+missing. However I've included the more practical ones for everyday use. Fee free to create a PR if
+you want to add anything.
+
 ## Examples
 
 Parse an incoming HTTP request.
