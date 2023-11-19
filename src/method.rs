@@ -7,6 +7,7 @@ pub enum Method {
     POST,
     PUT,
     DELETE,
+    PATCH,
 }
 
 impl Method {
@@ -23,8 +24,24 @@ impl Method {
             "POST" => Ok(Method::POST),
             "PUT" => Ok(Method::PUT),
             "DELETE" => Ok(Method::DELETE),
+            "PATCH" => Ok(Method::PATCH),
             _ => Err(method_err),
         }
+    }
+}
+
+impl ToString for Method {
+    // Get the string representation of a `Method`.
+    fn to_string(&self) -> String {
+        match self {
+            Self::HEAD => "HEAD",
+            Self::GET => "GET",
+            Self::POST => "POST",
+            Self::PUT => "PUT",
+            Self::DELETE => "DELETE",
+            Self::PATCH => "PATCH",
+        }
+        .to_string()
     }
 }
 
