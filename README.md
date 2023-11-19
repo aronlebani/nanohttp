@@ -5,8 +5,9 @@ responses.
 
 It is intended purely as an implementation of the HTTP protocol, and therefore does not
 handle things like routing, json serialization and deserialization, or building a HTTP server.
-See the examples below for how you can use it in combination with a TCP server and a runtime
-library such as [tokio](https://docs.rs/tokio/latest/tokio/) or
+In that regard, it fills a similar niche to the excellent [Hyper](https://hyper.rs/). See the
+examples below for how you can use it in combination with a TCP server and a runtime library such
+as [tokio](https://docs.rs/tokio/latest/tokio/) or
 [async-std](https://docs.rs/async-std/latest/async_std/) to build a custom HTTP server.
 
 This library is intended to abstract away the details of dealing with HTTP, without removing
@@ -15,6 +16,19 @@ methods which will automatically set relevant headers. But for the most part, it
 consumer of the library to ensure that the correct headers are set, and generally ensure that
 the constructed HTTP response is valid. An example of this is ensuring that the `Location`
 header is set when returning a `303` response code.
+
+## Motivation
+
+This project was inspired by the 
+[Building a Multithreaded Web Server](https://doc.rust-lang.org/book/ch20-00-final-project-a-web-server.html)
+project in the Rust book. It started out as a way of learning about how the HTTP protocol works and
+how it fits on top of TCP. I also wanted to see if I could build a useful HTTP server with as few
+dependencies as possible. See [the examples](#examples) below. Instead of using threads from the
+standard library, as in the project from the book, I opted to use a runtime library (async-std) for
+better performance, creating just a single dependency. However to take it even further, and
+understand how the async libraries work, there is
+[this excellent blog post](https://ibraheem.ca/posts/too-many-web-servers/), which would enable
+building a HTTP server using concurrency with absolutely zero dependencies. But thats a lot of work...
 
 ## Examples
 
